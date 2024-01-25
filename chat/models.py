@@ -17,6 +17,13 @@ class Group(models.Model):
     members = models.ManyToManyField(MyUser)
 
 
+class GroupMessage(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='group_messages')
+    sender = models.ForeignKey(MyUser, related_name='group_message_sender', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
 class BlockedUser(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='blocked_users')
     blocked_user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
