@@ -12,6 +12,9 @@ class TokenSerializer(TokenObtainPairSerializer):
 class EmailPostSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
+class PasswordPostSerializer(serializers.Serializer):
+    newpassword = serializers.CharField()
+
 class EmailPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=255)

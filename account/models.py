@@ -5,11 +5,11 @@ import uuid
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email=None, user_id=None, password=None, **kwargs):
-
         user = self.model(
-            user_id=user_id,
+            # user_id=user_id,
             email=email,
         )
+        print('okay here ')
         user.set_password(password)
         user.save(using=self._db)
         return user

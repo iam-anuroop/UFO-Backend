@@ -8,10 +8,14 @@ from .models import MyUser
 from .serializer import (
     TokenSerializer,
     EmailPostSerializer,
-    EmailPasswordSerializer
+    EmailPasswordSerializer,
+    PasswordPostSerializer
     )
 from .mail import send_email
 from django.contrib.auth import authenticate
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 
 def get_tokens_for_user(user, **kwargs):
@@ -42,10 +46,9 @@ class Register(APIView):
                 # Check if the user already exists
                 if MyUser.objects.filter(email=email).exists():
                     return Response({'msg': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
-
                 password = makePassword()
-                MyUser.objects.create(email=email, password=password)
-                print('hello')
+                print('helloooo')
+                MyUser.objects.create_user(email=email, password=password)
                 send_email(password=password, email=email)
                 return Response({'msg': f'Password sent to your email${password}'}, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -61,11 +64,11 @@ class Login(APIView):
                 email = serializer.validated_data.get('email')
                 if MyUser.objects.filter(email=email).exists():
                     password = serializer.validated_data.get('password')
-                    print(email,password)
-                    authenticate(request,email=email,password=password)
-                    user = MyUser.objects.get(email=email)
-                    token = get_tokens_for_user(user)
-                    return Response(token,status=status.HTTP_200_OK)
+                    user = authenticate(request,email=email,password=password)
+                    if user is not None:
+                        token = get_tokens_for_user(user)
+                        return Response(token,status=status.HTTP_200_OK)
+                    return Response({'msg':'check email, password'},status=status.HTTP_400_BAD_REQUEST)
                 return Response({'msg':'Email Does not exist'},status=status.HTTP_404_NOT_FOUND)
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -88,4 +91,19 @@ class ForgotPassword(APIView):
         
 
 
+@permission_classes([IsAuthenticated])
+class ResetPassword(APIView):
+    def post(self,request):
+        oldpassword = request.data.get('oldpassword')
+        user = authenticate(request,email=request.user.email,password=oldpassword)
+        if user is not None:
+            serializer = PasswordPostSerializer(data=request.data)
+            if serializer.is_valid():
+                password = serializer.validated_data.get('newpassword')
+                user.set_password(password)
+                user.save()
+                token = get_tokens_for_user(user)
+                return Response(token,status=status.HTTP_200_OK)
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response({'msg':'check your old password'},status=status.HTTP_400_BAD_REQUEST)
 # Create your views here.
