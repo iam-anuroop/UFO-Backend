@@ -10,22 +10,23 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
-class Group(models.Model):
+class GlobalGroup(models.Model):
     uuid_field = models.UUIDField(default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
+    subject = models.CharField(max_length=255,null=True,blank=True)
     group_admin = models.ForeignKey(MyUser, related_name='group_admin', on_delete=models.CASCADE)
     members = models.ManyToManyField(MyUser)
 
 
 class GroupMessage(models.Model):
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='group_messages')
+    group = models.ForeignKey(GlobalGroup, on_delete=models.CASCADE, related_name='group_messages')
     sender = models.ForeignKey(MyUser, related_name='group_message_sender', on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
 class BlockedUser(models.Model):
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='blocked_users')
+    group = models.ForeignKey(GlobalGroup, on_delete=models.CASCADE, related_name='blocked_users')
     blocked_user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
 
     class Meta:

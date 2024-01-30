@@ -1,5 +1,8 @@
 from django.urls import path
-from . import views
+from .views import (
+    ManageGlobalGroup
+)
 
 urlpatterns = [
+    path('creategroup/',ManageGlobalGroup.as_view(),name='creategroup'),
 ]
