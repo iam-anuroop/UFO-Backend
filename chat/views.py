@@ -41,6 +41,12 @@ class ManageGlobalGroup(APIView):
 
 
 
+@permission_classes([IsAuthenticated])
+class GetGlobalGrroups(APIView):
+    def get(self,request):
+        groups = GlobalGroup.objects.all()
+        serializer = GlobalGroupSerializer(groups,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 
 
