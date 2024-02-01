@@ -5,10 +5,13 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import uuid
+import time
 from .models import (
     GroupMessage,
     GlobalGroup,
-    BlockedUser
+    BlockedUser,
+    Search
 )
 from .serializer import (
     GlobalGroupSerializer,
@@ -49,6 +52,31 @@ class GetGlobalGrroups(APIView):
         return Response(serializer.data,status=status.HTTP_200_OK)
 
 
+
+
+class SearchRandomPerson(APIView):
+    def get(self, request):
+        user = request.user
+
+        search, created = Search.objects.get_or_create(user=user)
+
+        search.is_searching = True
+        search.save()
+
+        time.sleep(10)
+
+        random_person = Search.objects.filter(is_searching=True).exclude(user=user).first()
+
+        if random_person:
+            chat_id = str(uuid.uuid4())
+            search.is_searching = False
+            search.save()
+            random_person.is_searching = False
+            random_person.save()
+
+            return Response({'chat_id': chat_id}, status=status.HTTP_200_OK)
+        else:
+            return Response({'msg': 'No one online'}, status=status.HTTP_200_OK)
 
 
 # Create your views here.
