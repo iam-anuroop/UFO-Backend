@@ -39,6 +39,8 @@ class BlockedUser(models.Model):
 
 class Search(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
+    random_user = models.ForeignKey(MyUser, on_delete=models.CASCADE,null=True,blank=True,related_name='random_user_search')
+    uuid_field = models.UUIDField(default=uuid.uuid4, editable=False)
     is_searching = models.BooleanField(default=False)
 
 
