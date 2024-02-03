@@ -63,7 +63,7 @@ class SearchRandomPerson(APIView):
         search.is_searching = True
         search.save()
 
-        time.sleep(10)
+        time.sleep(1)
 
         random_person = Search.objects.filter(is_searching=True).exclude(user=user).first()
 
