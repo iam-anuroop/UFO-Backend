@@ -11,7 +11,7 @@ class Message(models.Model):
 
 
 class GlobalGroup(models.Model):
-    uuid_field = models.UUIDField(default=uuid.uuid4, editable=False)
+    uuid_field = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255)
     subject = models.CharField(max_length=255,null=True,blank=True)
     group_admin = models.ForeignKey(MyUser, related_name='group_admin', on_delete=models.CASCADE)

@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import (
     GlobalGroup
 )
+from account.serializer import (
+    MyuserUsernameSerializer
+)
 
 
 class GlobalGroupPostSerializer(serializers.ModelSerializer):
@@ -11,6 +14,7 @@ class GlobalGroupPostSerializer(serializers.ModelSerializer):
     
     
 class GlobalGroupSerializer(serializers.ModelSerializer):
+    group_admin = MyuserUsernameSerializer()
     class Meta:
         model = GlobalGroup
-        fields = "__all__"
+        fields = ["id","uuid_field","name","subject","group_admin","members"]

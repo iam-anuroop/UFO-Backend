@@ -48,7 +48,11 @@ class Register(APIView):
                     return Response({'msg': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
                 password = makePassword()
                 print('helloooo')
-                MyUser.objects.create_user(email=email, password=password)
+                user = MyUser.objects.create_user(
+                    email=email,
+                    password=password)
+                user.username = f'user_{user.id}'
+                user.save()
                 send_email(password=password, email=email)
                 return Response({'msg': f'Password sent to your email${password}'}, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

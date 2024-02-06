@@ -41,6 +41,16 @@ class ManageGlobalGroup(APIView):
         serializer = GlobalGroupSerializer(existing_group[0])
         return Response({'msg':'already an admin','group':serializer.data},status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self,request):
+        print(request.data)
+        u_id = request.query_params.get('uuid')
+        print(u_id)
+        try:
+            group = GlobalGroup.objects.get(uuid_field=u_id)
+            serializer = GlobalGroupSerializer(group)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'msg':'no groups exist'},status=status.HTTP_200_OK)
 
 
 
@@ -51,7 +61,11 @@ class GetGlobalGrroups(APIView):
         serializer = GlobalGroupSerializer(groups,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-
+@permission_classes([IsAuthenticated])
+class BlockUserFromGroup(APIView):
+    def post(self,request):
+        print(request.GET.get('user'))
+        return Response({'hi':'hi'})
 
 
 class SearchRandomPerson(APIView):

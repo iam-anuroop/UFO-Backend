@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import MyUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class TokenSerializer(TokenObtainPairSerializer):
@@ -7,6 +8,9 @@ class TokenSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         if user.email:
             token["email"] = user.email
+        if user.username:
+            token["username"] = user.username
+
         return token
     
 class EmailPostSerializer(serializers.Serializer):
@@ -18,3 +22,8 @@ class PasswordPostSerializer(serializers.Serializer):
 class EmailPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=255)
+
+class MyuserUsernameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ["id", "username"]
