@@ -93,4 +93,6 @@ class SearchRandomPerson(APIView):
             return Response({'msg': 'No one online'}, status=status.HTTP_200_OK)
 
 
+
+# add more
 # Create your views here.
