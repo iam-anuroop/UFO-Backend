@@ -91,6 +91,6 @@ class SearchRandomPerson(APIView):
             return Response({'chat_id': chat_id}, status=status.HTTP_200_OK)
         else:
             return Response({'msg': 'No one online'}, status=status.HTTP_200_OK)
-
+# implement blocking from group private groups and confirming group entry
 
 # Create your views here.
