@@ -7,6 +7,10 @@ from rest_framework.response import Response
 from rest_framework import status
 import uuid
 import time
+from django.db.models import get_or_create
+from account.models import (
+    MyUser
+)
 from .models import (
     GroupMessage,
     GlobalGroup,
@@ -64,7 +68,14 @@ class GetGlobalGrroups(APIView):
 @permission_classes([IsAuthenticated])
 class BlockUserFromGroup(APIView):
     def post(self,request):
-        print(request.GET.get('user'))
+        username = request.GET.get('user')
+        groupid = request.GET.get('groupid')
+        blockinguser = MyUser.objects.get(username=username)
+        group = GlobalGroup.objects.get(uuid_field = groupid)
+        group.members.remove(blockinguser)
+
+        blocklist = BlockedUser.objects.get_or_create(group=group)
+        blocklist.blocked_user.add(blockinguser)
         return Response({'hi':'hi'})
 
 
