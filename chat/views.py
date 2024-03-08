@@ -78,6 +78,26 @@ class BlockUserFromGroup(APIView):
         blocklist.blocked_user.add(blockinguser)
         return Response({'hi':'hi'})
 
+@permission_classes([IsAuthenticated])
+class UnBlockUserFromGroup(APIView):
+    def post(self,request):
+        username = request.GET.get('user')
+        groupid = request.GET.get('groupid')
+        unblockinguser = MyUser.objects.get(username=username)
+        group = GlobalGroup.objects.get(uuid_field = groupid)
+        # group.members.remove(unblockinguser)
+
+        blocklist = BlockedUser.objects.get(group=group)
+        blocklist.blocked_user.remove(unblockinguser)
+        return Response({'hi':'hi'})
+    
+
+# @permission_classes([IsAuthenticated])
+# class GetBlockedUsers(APIView):
+#     def get(self,request):
+#         groupid = request.GET.get('groupid')
+#         blocked_users = BlockedUser.objects.get(group_id = groupid)
+#         return Response()
 
 class SearchRandomPerson(APIView):
     def get(self, request):
