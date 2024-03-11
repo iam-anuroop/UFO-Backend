@@ -92,12 +92,12 @@ class UnBlockUserFromGroup(APIView):
         return Response({'hi':'hi'})
     
 
-@permission_classes([IsAuthenticated])
-class GetBlockedUsers(APIView):
-    def get(self,request):
-        groupid = request.GET.get('groupid')
-        blocked_users = BlockedUser.objects.get(group_id = groupid)
-        return Response()
+# @permission_classes([IsAuthenticated])
+# class GetBlockedUsers(APIView):
+#     def get(self,request):
+#         groupid = request.GET.get('groupid')
+#         blocked_users = BlockedUser.objects.get(group_id = groupid)
+#         return Response()
 
 
 
