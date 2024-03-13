@@ -65,6 +65,9 @@ class GetGlobalGrroups(APIView):
         serializer = GlobalGroupSerializer(groups,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+
+# blocking and unblocking should perform in one viewww thats goood
+# change the current views
 @permission_classes([IsAuthenticated])
 class BlockUserFromGroup(APIView):
     def post(self,request):
