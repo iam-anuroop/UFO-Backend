@@ -65,6 +65,10 @@ class GetGlobalGrroups(APIView):
         serializer = GlobalGroupSerializer(groups,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+
+
+
+# unblock and blocking in one viewwwwww 
 @permission_classes([IsAuthenticated])
 class BlockUserFromGroup(APIView):
     def post(self,request):
@@ -92,13 +96,13 @@ class UnBlockUserFromGroup(APIView):
         return Response({'hi':'hi'})
     
 
-# @permission_classes([IsAuthenticated])
-# class GetBlockedUsers(APIView):
-#     def get(self,request):
-#         groupid = request.GET.get('groupid')
-#         blocked_users = BlockedUser.objects.get(group_id = groupid)
-#         return Response()
-
+@permission_classes([IsAuthenticated])
+class GetBlockedUsers(APIView):
+    def get(self,request):
+        groupid = request.GET.get('groupid')
+        blocked_users = BlockedUser.objects.get(group_id = groupid)
+        return Response()
+    
 class SearchRandomPerson(APIView):
     def get(self, request):
         user = request.user
